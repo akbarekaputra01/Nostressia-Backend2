@@ -11,7 +11,9 @@ class Settings(BaseSettings):
     db_host: str = Field(..., env="DB_HOST")
     db_port: int = Field(3306, env="DB_PORT")
     db_name: str = Field(..., env="DB_NAME")
-    secret_key: str = Field(..., env="SECRET_KEY")
+    secret_key: str = Field(
+        "change-me", env="SECRET_KEY", description="Default is for local development only"
+    )
     access_token_expire_minutes: int = Field(60 * 24, env="ACCESS_TOKEN_EXPIRE_MINUTES")
 
 

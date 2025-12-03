@@ -18,7 +18,7 @@ Implementasi FastAPI untuk Nostressia yang selaras dengan repository asli, tetap
 
 ## Menjalankan lokal
 1. Buat environment: `python -m venv .venv && source .venv/bin/activate`.
-2. Salin `.env.example` menjadi `.env` dan sesuaikan kredensial database serta `SECRET_KEY`.
+2. Salin `.env.example` menjadi `.env` dan sesuaikan kredensial database serta `SECRET_KEY` (app menyediakan default lokal `change-me`, tetapi sebaiknya diganti untuk keamanan).
 3. Install dependensi: `pip install -r requirements.txt`.
 4. Jalankan server: `uvicorn src.app:app --reload`.
 
