@@ -1,11 +1,24 @@
-# main.py
-import os
-
-import mysql.connector
 from fastapi import FastAPI
-from mysql.connector import Error
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
-app = FastAPI()
+from app.core.database import Base, engine
+from app.routes.auth_route import router as auth_router
+from app.routes.motivation_route import router as motivation_router
+
+app = FastAPI(title="Nostressia API")
+
+Base.metadata.create_all(bind=engine)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 
 def get_db_connection():
@@ -38,20 +51,18 @@ def health_check():
 
 @app.get("/api/db-health")
 def db_health_check():
-    """Verify that the application can connect to the configured database."""
-
     try:
-        with get_db_connection() as connection:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT DATABASE()")
-                current_db = cursor.fetchone()[0]
+        with engine.connect() as connection:
+            current_db = connection.execute(text("SELECT DATABASE()")).scalar()
         return {"status": "connected", "database": current_db}
-    except Error as exc:
-        # Returning the error message helps debugging without exposing stack traces
+    except SQLAlchemyError as exc:
         return {"status": "error", "detail": str(exc)}
 
 
-# This is important for Vercel
+app.include_router(auth_router, prefix="/api")
+app.include_router(motivation_router, prefix="/api")
+
+
 if __name__ == "__main__":
     import uvicorn
 
