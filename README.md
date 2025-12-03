@@ -24,8 +24,10 @@ Implementasi FastAPI untuk Nostressia yang selaras dengan repository asli, tetap
 
 ## Deployment ke Vercel
 1. Pastikan sudah login ke Vercel CLI (`npm i -g vercel` lalu `vercel login`).
-2. Pastikan `vercel.json` ada di root (sudah disertakan). Vercel akan menggunakan `api/index.py` sebagai entrypoint FastAPI.
+2. Pastikan `vercel.json` ada di root (sudah disertakan). Vercel akan menggunakan `api/index.py` sebagai entrypoint FastAPI dan mengelola ASGI server sendiri (tidak menjalankan `uvicorn` di production).
 3. Set environment variables di Project Settings Vercel (`DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `SECRET_KEY`, `ACCESS_TOKEN_EXPIRE_MINUTES`).
 4. Deploy: `vercel deploy`.
+
+> Catatan: `uvicorn` hanya diperlukan untuk pengembangan lokal. Saat di Vercel, fungsi akan dibungkus oleh runtime `vercel-python@3.12` sehingga tidak perlu mem-boot `uvicorn` secara manual.
 
 Referensi dokumen: [FastAPI on Vercel](https://vercel.com/docs/frameworks/backend/fastapi).
