@@ -1,17 +1,8 @@
-# main.py
-from fastapi import FastAPI
+from app.main import app
 
-app = FastAPI()
+__all__ = ["app"]
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello World from FastAPI on Vercel!"}
-
-@app.get("/api/health")
-def health_check():
-    return {"status": "healthy"}
-
-# This is important for Vercel
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
