@@ -3,21 +3,29 @@ import os
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
-DB_USER = os.getenv("DB_USER", "Nostressia_nationalas")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "2f5d922599f787ad53a4a1c7a243e24be84a5be7")
-DB_HOST = os.getenv("DB_HOST", "mfv81z.h.filess.io")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT", "3306")
-DB_NAME = os.getenv("DB_NAME", "Nostressia_nationalas")
+DB_NAME = os.getenv("DB_NAME")
 
-DATABASE_URL = (
-    f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+engine = create_engine(
+    DATABASE_URL,
+    echo=False,
+    pool_size=2,
+    max_overflow=0,
+    pool_recycle=1800,
+    pool_pre_ping=True,
+    future=True,
 )
 
-engine = create_engine(DATABASE_URL, future=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
